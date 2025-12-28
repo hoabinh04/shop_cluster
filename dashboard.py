@@ -623,7 +623,7 @@ elif page == "📦 Gợi Ý Bundle":
     
     # Load association rules
     try:
-        rules_df = pd.read_csv('data/processed/rules_apriori_filtered.csv', encoding='utf-8')
+        rules_df = pd.read_csv('data/processed/rules_fpgrowth_top200_selected.csv', encoding='utf-8')
         
         # CLUSTER-SPECIFIC SORTING STRATEGIES
         # Mỗi cụm có chiến lược khác nhau để gợi ý sản phẩm
