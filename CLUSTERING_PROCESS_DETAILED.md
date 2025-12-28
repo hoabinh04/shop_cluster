@@ -52,15 +52,15 @@ Parameters sử dụng:
 **Sắp xếp theo: LIFT (giảm dần)**
 
 ```
-Why LIFT, not CONFIDENCE?
+Tại sao chọn LIFT, không phải CONFIDENCE?
 
 Scenario: Sản phẩm A (phổ biến, support 50%) → Sản phẩm B (phổ biến, support 60%)
   - Confidence = 55% (cao)
   - Lift = 55% / 60% = 0.92x (thấp! → không liên hệ)
-  → CONFIDENCE bị "lừa" bởi popularity của B
+  → CONFIDENCE bị "lừa" bởi sự phổ biến của B
 
-→ LIFT giải quyết vấn đề này bằng cách normalize by support of consequent
-→ Chỉ giữ luật thực sự có mối quan hệ (lift > 1)
+→ LIFT giải quyết vấn đề này bằng cách chuẩn hóa theo support của sản phẩm hậu quả
+→ Chỉ giữ luật có thực sự có mối quan hệ (lift > 1)
 ```
 
 ### 1.4 Bảng 10 Luật Tiêu Biểu (Top 10 theo Lift)
@@ -276,10 +276,10 @@ Antecedent Length | # Rules | Silhouette | Davies-Bouldin | Insight |
 
 | Metric | Công Thức | Mục Tiêu | Range |
 |--------|-----------|----------|-------|
-| **Silhouette** | $(b-a)/\max(a,b)$ | Maximize | [-1, +1] |
-| **Davies-Bouldin** | Ratio intra/inter distance | Minimize | [0, ∞) |
-| **Calinski-Harabasz** | Between/within cluster variance | Maximize | [0, ∞) |
-| **Elbow** | Inertia (SSE) | Find "knee" point | [0, ∞) |
+| **Silhouette** | $(b-a)/\max(a,b)$ | Tối đa hóa | [-1, +1] |
+| **Davies-Bouldin** | Tỷ lệ khoảng cách trong/ngoài cụm | Tối thiểu hóa | [0, ∞) |
+| **Calinski-Harabasz** | Tỷ lệ phương sai giữa/trong cụm | Tối đa hóa | [0, ∞) |
+| **Elbow** | Inertia (SSE) | Tìm điểm "khuỷu" | [0, ∞) |
 
 **Kết quả:**
 
@@ -312,9 +312,9 @@ Inertia
       2    3    4    5    6    7
       
 Giải thích:
-- K=2,3: Inertia giảm nhanh (steep) → clusters không phù hợp
-- K=4: Inertia bắt đầu "phẳng" (flat) → điểm uốn (elbow)
-- K≥5: Inertia tiếp tục giảm nhưng chậm → thêm clusters không có lợi
+- K=2,3: Inertia giảm nhanh (dốc) → clusters không thích hợp
+- K=4: Inertia bắt đầu "phẳng" (nằm ngang) → điểm uốn (elbow)
+- K≥5: Inertia tiếp tục giảm nhưng chậm → thêm cụm không có lợi
 ```
 
 ### 3.3 Lựa Chọn K=4 - Giải Thích Chi Tiết
@@ -362,11 +362,11 @@ Tại sao K=4 perfect?
 **3. Quyết Định Cuối Cùng:**
 
 > **K=4 được chọn vì:**
-> - ✅ Elbow point rõ ràng tại K=4
-> - ✅ Silhouette = 0.4772 (acceptable)
-> - ✅ Calinski-Harabasz = 618.7 (excellent balance)
-> - ✅ Tạo 4 personas khách hàng có ý nghĩa marketing
-> - ✅ Số lượng hợp lý để triển khai campaigns
+> - ✅ Điểm elbow rõ ràng tại K=4
+> - ✅ Silhouette = 0.4772 (có thể chấp nhận được)
+> - ✅ Calinski-Harabasz = 618.7 (cân bằng xuất sắc)
+> - ✅ Tạo 4 nhân vật khách hàng có ý nghĩa marketing
+> - ✅ Số lượng phù hợp để triển khai các chiến dịch
 
 ---
 
@@ -379,16 +379,16 @@ from sklearn.cluster import KMeans
 
 km = KMeans(
     n_clusters=4,
-    init='k-means++',      # Smart centroid initialization
-    n_init=20,             # Try 20 times, pick best
+    init='k-means++',      # Khởi tạo tâm cụm thông minh
+    n_init=20,             # Thử 20 lần, chọn tốt nhất
     max_iter=300,
-    random_state=42        # Reproducible
+    random_state=42        # Có thể tái tạo
 )
 
-# Feature matrix: 3,921 × 175 (weighted, scaled)
+# Ma trận đặc trưng: 3,921 × 175 (có trọng số, chuẩn hóa)
 km.fit(X_weighted_scaled)
 
-# Output: cluster labels
+# Kết quả: nhãn cụm
 y_pred = km.labels_  # [0, 1, 2, 3, 1, 0, ...]
 ```
 
@@ -407,10 +407,10 @@ C003,0
 
 ### 4.1 PCA Scatter Plot (2D)
 
-**Phương pháp:** PCA (Principal Component Analysis)
+**Phương pháp:** PCA (Phân Tích Thành Phần Chính)
 
 ```
-3,921 × 175 features → Giảm chiều → 2D (PC1, PC2)
+3,921 × 175 đặc trưng → Giảm chiều → 2D (PC1, PC2)
 ```
 
 **Giải thích hình ảnh (chi tiết):**
@@ -436,35 +436,35 @@ C003,0
 
 Nhận xét:
 1. Cluster 0 (Hồng): Tách biệt rõ ở phía phải-trên
-   → VIP customers: hành vi mua đặc biệt (weighted features cao)
+   → Khách VIP: hành vi mua đặc biệt (đặc trưng có trọng số cao)
    
 2. Cluster 1 (Xanh): Chiếm phần lớn + phân tán rộng
-   → Casual shoppers: hành vi đa dạng
+   → Khách hàng bình thường: hành vi đa dạng
    
 3. Cluster 2 (Tím): Nằm dưới-trái, nhỏ, tách biệt nhẹ
-   → New explorers: mới mua (features thấp)
+   → Khách hàng mới: mới mua (đặc trưng thấp)
    
 4. Cluster 3 (Cam): Nằm trái-xa, nhỏ, rõ ràng
-   → Deal hunters: inactive (hầu hết features = 0)
+   → Người tìm kiếm deals: không hoạt động (hầu hết đặc trưng = 0)
 
-Variance explained:
-- PC1 + PC2 = 35.2% of total variance
+Phương sai giải thích:
+- PC1 + PC2 = 35.2% tổng phương sai
 → Cần lưu ý: 64.8% thông tin nằm ở chiều cao hơn
-→ Visualize tốt nhưng có limitations
+→ Trực quan hóa tốt nhưng có giới hạn
 ```
 
-### 4.2 Silhouette Plot Chi Tiết
+### 4.2 Biểu Đồ Silhouette Chi Tiết
 
 ```
-Silhouette Score = (b - a) / max(a, b)
+Diểm Silhouette = (b - a) / max(a, b)
 
-a = average distance to points in same cluster (intra-cluster)
-b = average distance to nearest cluster (inter-cluster)
+a = khoảng cách trung bình đến các điểm trong cùng cụm (trong-cụm)
+b = khoảng cách trung bình đến cụm gần nhất (giữa-cụm)
 
 Range: [-1, +1]
-- Positive: point closer to own cluster (good)
-- Negative: point closer to other cluster (bad)
-- 0: point on boundary
+- Dương: điểm gần với cụm của mình (tốt)
+- Âm: điểm gần với cụm khác (xấu)
+- 0: điểm trên đường biên
 ```
 
 **Per-cluster results:**
@@ -477,69 +477,69 @@ Range: [-1, +1]
 | 3 | 161 | 0.55 | ⭐⭐ Good (nhỏ nhưng rõ) |
 
 **Diễn giải:**
-- Cluster 0: VIP customers rất khác biệt (Silhouette 0.62)
-- Cluster 1: Casual customers phân tán (kích thước 80% → tự nhiên Silhouette thấp)
-- Overall 0.4772: **Acceptable** (theo chuẩn "good" là 0.4-0.6)
+- Cluster 0: Khách VIP rất khác biệt (Silhouette 0.62)
+- Cluster 1: Khách bình thường phân tán (kích thước 80% → tự nhiên Silhouette thấp)
+- Tổng thể 0.4772: **Có thể chấp nhận** (theo chuẩn "tốt" là 0.4-0.6)
 
 ---
 
 ## PHẦN 5: SYSTEMATIC COMPARISON - So Sánh Có Hệ Thống
 
-### 5.1 So Sánh Rule-Only vs Rule+RFM
+### 5.1 So Sánh Chỉ Luật vs Luật+RFM
 
 ```
-Assumption: RFM information (giá trị khách) sẽ cải thiện clustering?
+Giả định: Thông tin RFM (giá trị khách) sẽ cải thiện clustering?
 
-Test 1: Binary Rules Only
-├─ Features: 175 rule features
+Test 1: Chỉ sử dụng Luật Nhị Phân
+├─ Đặc trưng: 175 đặc trưng luật
 ├─ Silhouette: 0.4739
 ├─ Davies-Bouldin: 0.89
-└─ Cluster distribution: 84.3% in largest → unbalanced
+└─ Phân bổ cụm: 84.3% trong cụm lớn nhất → không cân bằng
 
-Test 2: Binary Rules + RFM (Scaled)
-├─ Features: 175 rules + 3 RFM
+Test 2: Luật Nhị Phân + RFM (Chuẩn hóa)
+├─ Đặc trưng: 175 luật + 3 RFM
 ├─ Silhouette: 0.5135 (+8.4%) ✅
 ├─ Davies-Bouldin: 0.78 (-12.4%) ✅
-└─ Cluster distribution: 78.2% → more balanced
+└─ Phân bổ cụm: 78.2% → cân bằng hơn
 
-Conclusion: RFM helps significantly!
-Reason: RFM adds "value dimension" to rule-based clustering
+Kết luận: RFM giúp rất đáng kể!
+Lý do: RFM thêm "chiều giá trị" vào clustering dựa trên luật
 ```
 
-### 5.2 So Sánh Binary vs Weighted Rules
+### 5.2 So Sánh Luật Nhị Phân vs Có Trọng Số
 
 ```
-Test 1: Binary (0/1) Features
+Test 1: Đặc trưng Nhị Phân (0/1)
 ├─ Silhouette: 0.4739
 ├─ Calinski-Harabasz: 512.4
-└─ All rules treated equally
+└─ Tất cả luật được coi như nhau
 
-Test 2: Weighted (lift × conf) Features
+Test 2: Đặc trưng Có Trọng Số (lift × confidence)
 ├─ Silhouette: 0.4772 (+0.7%)
 ├─ Calinski-Harabasz: 618.7 (+20.7%) ✅
-└─ Strong rules get higher weight
+└─ Luật mạnh được trọng số cao hơn
 
-Conclusion: Weighting improves between-cluster variance!
-Reason: Weighted features amplify differences between VIP vs casual
+Kết luận: Cân nặng cải thiện phương sai giữa-cụm!
+Lý do: Đặc trưng có trọng số làm tăng sự khác biệt giữa VIP và khách bình thường
 ```
 
 ### 5.3 So Sánh Top-K Nhỏ vs Lớn
 
 ```
-Experiment: Sử dụng top K rules với K = 50, 100, 175, ALL
+Thí nghiệm: Sử dụng top K rules với K = 50, 100, 175, TẤT CẢ
 
-K   │ # Features │ Silhouette │ Sparsity │ Insight
-────┼────────────┼────────────┼──────────┼──────────────────
-50  │ 50         │ 0.4521     │ 95.2%    │ Too sparse
-100 │ 100        │ 0.4645     │ 92.8%    │ Better
-175 │ 175        │ 0.4772 ✓   │ 89.5%    │ Sweet spot
-ALL │ 1,795      │ 0.4312     │ 98.7%    │ Too much noise
+K   │ # Đặc trưng │ Silhouette │ Độ Sparse │ Insight
+────┼─────────────┼────────────┼───────────┼──────────────────
+50  │ 50          │ 0.4521     │ 95.2%     │ Quá sparse
+100 │ 100         │ 0.4645     │ 92.8%     │ Tốt hơn
+175 │ 175         │ 0.4772 ✓   │ 89.5%     │ Điểm ngọt
+TẤT CẢ│ 1,795      │ 0.4312     │ 98.7%     │ Quá nhiều nhiễu
 
-Conclusion: Top 175 is optimal
-Reason:
+Kết luận: Top 175 là tối ưu
+Lý do:
 - Top 50/100: Quá ít thông tin
-- Top 175: Balance between signal và noise
-- All 1,795: Quá sparse, noise dominates
+- Top 175: Cân bằng giữa tín hiệu và nhiễu
+- Tất cả 1,795: Quá sparse, nhiễu chiếm ưu thế
 ```
 
 ### 5.4 Bảng So Sánh Tổng Hợp
@@ -551,12 +551,12 @@ Reason:
 | Variant B | Binary | ✅ | 178 | 3 | 0.5135 | 589.2 | 0.78 | RFM-heavy |
 | Variant C | Weighted | ✅ | 178 | 4 | 0.5021 | 604.8 | 0.81 | Balanced |
 
-**Lý do chọn Variant A:**
-- ✅ Highest Calinski-Harabasz (618.7) = best separation
-- ✅ Good Silhouette (0.4772)
-- ✅ Simplest (rules only, no RFM complexity)
-- ✅ K=4 has clear business meaning
-- ✅ Weighted rules capture behavior strength
+**Lý do chọn Biến Thể A:**
+- ✅ Calinski-Harabasz cao nhất (618.7) = tách biệt tốt nhất
+- ✅ Silhouette tốt (0.4772)
+- ✅ Đơn giản nhất (chỉ luật, không phức tạp RFM)
+- ✅ K=4 có ý nghĩa kinh doanh rõ ràng
+- ✅ Luật có trọng số bắt lực hành vi
 
 ---
 
@@ -580,28 +580,28 @@ Reason:
 | **Monetary (avg)** | £1,460 | £385 | £125 | £78 | C0=rich, C3=low-value |
 | **RFM Score** | High-High-High | Med-Med-Med | Low-Low-Low | High-Low-Low |
 
-**RFM Interpretation:**
+**Diễn giải RFM:**
 ```
-RFM Score Legend:
-- High Recency = Recent buyer (< 60 days)
-- High Frequency = Repeat buyer (> 10 orders)
-- High Monetary = High spender (> £1000)
+Chú giải Điểm RFM:
+- Recency Cao = Khách mua gần đây (< 60 ngày)
+- Frequency Cao = Khách mua lặp lại (> 10 đơn hàng)
+- Monetary Cao = Khách chi tiêu cao (> £1000)
 
-Cluster 0: HHH (Champions VIP)
-  ✓ Recent, frequent, high-value customers
-  → Best customers to retain
+Cluster 0: HHH (VIP Nhà Vô Địch)
+  ✓ Khách mua gần đây, thường xuyên, giá trị cao
+  → Khách tốt nhất để giữ lại
 
-Cluster 1: MMM (Core Customers)
-  ✓ Average on all dimensions
-  → Bulk of revenue, growth potential
+Cluster 1: MMM (Khách Cốt Lõi)
+  ✓ Trung bình ở tất cả chiều
+  → Phần lớn doanh thu, tiềm năng tăng trưởng
 
-Cluster 2: LLL (New Customers)
-  ✓ Recent but low frequency & monetary
-  → Onboarding phase, conversion opportunity
+Cluster 2: LLL (Khách Mới)
+  ✓ Gần đây nhưng tần suất & chi tiêu thấp
+  → Giai đoạn onboarding, cơ hội chuyển đổi
 
-Cluster 3: HLL (At-Risk Dormant)
-  ✓ Was valuable (H), but now inactive (L)
-  → Re-activation needed urgently
+Cluster 3: HLL (Không Hoạt Động - Rủi Ro)
+  ✓ Từng có giá trị (H), nhưng giờ không hoạt động (L)
+  → Cần kích hoạt lại khẩn cấp
 ```
 
 ### 6.3 Top 10 Luật Kích Hoạt Nhiều Nhất Theo Cụm
