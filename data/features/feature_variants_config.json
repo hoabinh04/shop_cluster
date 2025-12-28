@@ -1,0 +1,54 @@
+{
+  "baseline_binary": {
+    "description": "Binary rule features (no weighting, no RFM)",
+    "config": {
+      "weighting": "none",
+      "rfm": false,
+      "scale_rules": false,
+      "scale_rfm": false
+    },
+    "shape": [
+      3921,
+      175
+    ]
+  },
+  "variant_a_weighted": {
+    "description": "Weighted rule features (lift \u00d7 confidence)",
+    "config": {
+      "weighting": "lift_confidence",
+      "rfm": false,
+      "scale_rules": false,
+      "scale_rfm": false
+    },
+    "shape": [
+      3921,
+      175
+    ]
+  },
+  "variant_b_binary_rfm": {
+    "description": "Binary rules + RFM (RFM scaled)",
+    "config": {
+      "weighting": "none",
+      "rfm": true,
+      "scale_rules": false,
+      "scale_rfm": true
+    },
+    "shape": [
+      3921,
+      178
+    ]
+  },
+  "variant_c_weighted_rfm": {
+    "description": "Weighted rules + RFM (both scaled)",
+    "config": {
+      "weighting": "lift_confidence",
+      "rfm": true,
+      "scale_rules": true,
+      "scale_rfm": true
+    },
+    "shape": [
+      3921,
+      178
+    ]
+  }
+}

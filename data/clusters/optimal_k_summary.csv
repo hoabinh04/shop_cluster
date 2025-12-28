@@ -1,0 +1,5 @@
+Variant,Optimal_K,Justification
+baseline_binary,3,"Metrics suggest K=2, but for marketing actionability, K=3 provides better segment granularity. At K=3: Silhouette=0.4745, provides meaningful customer segments for targeted marketing."
+variant_a_weighted,4,"K=4 shows consensus across metrics (Silhouette=4, DB=3, CH=4) and aligns with marketing actionability. At K=4: Silhouette=0.5335, provides meaningful customer segments for targeted marketing."
+variant_b_binary_rfm,3,"K=3 shows consensus across metrics (Silhouette=2, DB=3, CH=3) and aligns with marketing actionability. At K=3: Silhouette=0.5137, provides meaningful customer segments for targeted marketing."
+variant_c_weighted_rfm,3,"Metrics suggest K=2, but for marketing actionability, K=3 provides better segment granularity. At K=3: Silhouette=0.4640, provides meaningful customer segments for targeted marketing."
